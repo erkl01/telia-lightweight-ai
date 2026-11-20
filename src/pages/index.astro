@@ -1,0 +1,92 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Hittar automatiskt alla sidor i src/pages/. Nya sidor dyker upp här av sig själva.
+// Namn och beskrivning läses från <Layout title="..." description="..."> på varje sida.
+const sources = import.meta.glob<string>("./**/*.astro", { query: "?raw", import: "default", eager: true });
+
+const pages = Object.entries(sources)
+  .filter(([path]) => path !== "./index.astro" && !path.includes("["))
+  .map(([path, source]) => {
+    const href = "/" + path.replace(/^\.\//, "").replace(/(\/index)?\.astro$/, "");
+    const title = source.match(/<Layout[^>]*\stitle="([^"]+)"/)?.[1] ?? href;
+    const description = source.match(/<Layout[^>]*\sdescription="([^"]+)"/)?.[1];
+    return { href, title: title.split(/\s[–|-]\s/)[0], description };
+  })
+  .sort((a, b) => a.title.localeCompare(b.title, "sv"));
+---
+
+<Layout title="Sidor – Telia prototyp" description="Alla sidor i prototypprojektet.">
+  <main class="page">
+    <h1>Sidor</h1>
+    <ul class="page-list">
+      {
+        pages.map((page) => (
+          <li>
+            <a href={page.href}>
+              <span class="page-list__title">{page.title}</span>
+              <span class="page-list__path">{page.href}</span>
+              {page.description && <span class="page-list__description">{page.description}</span>}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  .page {
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: var(--space-16) var(--space-4);
+  }
+
+  h1 {
+    margin: 0 0 var(--space-6);
+    font-family: var(--font-family-display);
+    font-size: 2.5rem;
+    line-height: var(--line-height-tight);
+  }
+
+  .page-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .page-list a {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    text-decoration: none;
+    transition: border-color 160ms ease, background-color 160ms ease;
+  }
+
+  .page-list a:hover {
+    border-color: var(--color-interactive-primary);
+    background: var(--color-brand-50);
+  }
+
+  .page-list__title {
+    color: var(--color-interactive-text);
+    font-size: var(--font-size-lg);
+    font-weight: 500;
+  }
+
+  .page-list__path {
+    color: var(--color-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+  }
+
+  .page-list__description {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+</style>

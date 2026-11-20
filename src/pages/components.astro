@@ -1,0 +1,738 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/Button.astro";
+import Input from "../components/Input.astro";
+
+// Auto-discover every component file so new ones show up in the list automatically.
+const componentFiles = Object.keys(import.meta.glob("../components/**/*.astro"));
+const allComponents = componentFiles
+  .map((path) => path.split("/").pop()!.replace(".astro", ""))
+  .sort((a, b) => a.localeCompare(b, "sv"));
+
+// Components that have a documented demo on this page.
+const documented = ["Button", "Input"];
+const undocumented = allComponents.filter((name) => !documented.includes(name));
+
+const buttonVariants = ["primary", "secondary", "expressive", "text"] as const;
+
+const buttonProps = [
+  { name: "variant", type: '"primary" | "secondary" | "expressive" | "text"', default: '"primary"' },
+  { name: "type", type: '"button" | "submit" | "reset"', default: '"button"' },
+  { name: "href", type: "string", default: "–", note: "Renderas som <a> när satt" },
+  { name: "disabled", type: "boolean", default: "false" },
+  { name: "class", type: "string", default: "–" },
+];
+
+const inputProps = [
+  { name: "label", type: "string", default: "–", required: true },
+  { name: "name", type: "string", default: "–", required: true },
+  { name: "id", type: "string", default: "name" },
+  { name: "type", type: '"text" | "email" | "tel" | "search" | "url"', default: '"text"' },
+  { name: "placeholder", type: "string", default: "–" },
+  { name: "autocomplete", type: "string", default: "–" },
+  { name: "required", type: "boolean", default: "false" },
+  { name: "disabled", type: "boolean", default: "false" },
+];
+---
+
+<Layout title="Komponenter – Telia prototyp" description="Visuell översikt över alla komponenter i projektet.">
+  <div class="gallery">
+    <aside class="sidebar" aria-label="Komponenter">
+      <a class="sidebar__brand" href="/">← Till startsidan</a>
+      <h1 class="sidebar__title">Komponenter</h1>
+      <p class="sidebar__count">{allComponents.length} i <code>src/components/</code></p>
+
+      <label class="visually-hidden" for="component-search">Sök komponent</label>
+      <input id="component-search" class="sidebar__search" type="search" placeholder="Sök komponent…" autocomplete="off" />
+
+      <nav>
+        <ul class="sidebar__list" id="component-nav">
+          {
+            allComponents.map((name) => (
+              <li data-name={name.toLowerCase()}>
+                <a href={`#${name.toLowerCase()}`} data-nav-link>
+                  {name}
+                  {!documented.includes(name) && <span class="tag">Ingen demo</span>}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="sidebar__empty" id="component-empty" hidden>Inga träffar.</p>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <!-- ============ BUTTON ============ -->
+      <section class="component" id="button" data-component="button">
+        <header class="component__header">
+          <p class="component__path">src/components/Button.astro</p>
+          <h2>Button</h2>
+          <p class="component__lead">Knapp i fyra varianter. Blir en länk (<code>&lt;a&gt;</code>) när <code>href</code> är satt.</p>
+        </header>
+
+        <h3>Varianter & lägen</h3>
+        <div class="matrix">
+          <div class="matrix__row matrix__row--head">
+            <span></span><span>Standard</span><span>Inaktiverad</span><span>Som länk</span>
+          </div>
+          {
+            buttonVariants.map((variant) => (
+              <div class="matrix__row">
+                <code class="matrix__label">{variant}</code>
+                <div><Button variant={variant}>Knapp</Button></div>
+                <div><Button variant={variant} disabled>Knapp</Button></div>
+                <div><Button variant={variant} href="#button">Länk</Button></div>
+              </div>
+            ))
+          }
+        </div>
+
+        <h3>Playground</h3>
+        <div class="playground" data-playground="button">
+          <div class="playground__stage">
+            <span data-pg-as="button"><Button>Beställ nu</Button></span>
+            <span data-pg-as="link" hidden><Button href="#button">Beställ nu</Button></span>
+          </div>
+          <form class="playground__controls" onsubmit="return false">
+            <label>Text
+              <input type="text" name="text" value="Beställ nu" />
+            </label>
+            <label>Variant
+              <select name="variant">
+                {buttonVariants.map((v) => <option value={v}>{v}</option>)}
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" name="disabled" /> disabled</label>
+            <label class="check"><input type="checkbox" name="href" /> href (länk)</label>
+          </form>
+          <div class="code">
+            <pre><code data-pg-code></code></pre>
+            <button class="code__copy" type="button" data-copy>Kopiera</button>
+          </div>
+        </div>
+
+        <h3>Props</h3>
+        <div class="table-wrap">
+          <table class="props">
+            <thead><tr><th>Prop</th><th>Typ</th><th>Default</th></tr></thead>
+            <tbody>
+              {
+                buttonProps.map((p) => (
+                  <tr>
+                    <td><code>{p.name}</code></td>
+                    <td><code class="type">{p.type}</code>{p.note && <small>{p.note}</small>}</td>
+                    <td><code>{p.default}</code></td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ INPUT ============ -->
+      <section class="component" id="input" data-component="input">
+        <header class="component__header">
+          <p class="component__path">src/components/Input.astro</p>
+          <h2>Input</h2>
+          <p class="component__lead">Textfält med etikett, stöd för obligatoriskt och inaktiverat läge.</p>
+        </header>
+
+        <h3>Lägen</h3>
+        <div class="states">
+          <div class="states__item">
+            <span class="states__label">Standard</span>
+            <Input label="Namn" name="demo-name" placeholder="Förnamn Efternamn" />
+          </div>
+          <div class="states__item">
+            <span class="states__label">Obligatorisk</span>
+            <Input label="E-post" name="demo-email" type="email" placeholder="namn@exempel.se" required />
+          </div>
+          <div class="states__item">
+            <span class="states__label">Inaktiverad</span>
+            <Input label="Telefonnummer" name="demo-tel" type="tel" placeholder="070-123 45 67" disabled />
+          </div>
+          <div class="states__item">
+            <span class="states__label">Sök</span>
+            <Input label="Sök" name="demo-search" type="search" placeholder="Vad letar du efter?" />
+          </div>
+        </div>
+
+        <h3>Playground</h3>
+        <div class="playground" data-playground="input">
+          <div class="playground__stage playground__stage--wide">
+            <Input label="E-post" name="pg-input" type="email" placeholder="namn@exempel.se" required />
+          </div>
+          <form class="playground__controls" onsubmit="return false">
+            <label>Label
+              <input type="text" name="label" value="E-post" />
+            </label>
+            <label>Placeholder
+              <input type="text" name="placeholder" value="namn@exempel.se" />
+            </label>
+            <label>Type
+              <select name="type">
+                {["text", "email", "tel", "search", "url"].map((t) => <option value={t} selected={t === "email"}>{t}</option>)}
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" name="required" checked /> required</label>
+            <label class="check"><input type="checkbox" name="disabled" /> disabled</label>
+          </form>
+          <div class="code">
+            <pre><code data-pg-code></code></pre>
+            <button class="code__copy" type="button" data-copy>Kopiera</button>
+          </div>
+        </div>
+
+        <h3>Props</h3>
+        <div class="table-wrap">
+          <table class="props">
+            <thead><tr><th>Prop</th><th>Typ</th><th>Default</th></tr></thead>
+            <tbody>
+              {
+                inputProps.map((p) => (
+                  <tr>
+                    <td><code>{p.name}</code>{p.required && <span class="req">obligatorisk</span>}</td>
+                    <td><code class="type">{p.type}</code></td>
+                    <td><code>{p.default}</code></td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============ UNDOCUMENTED ============ -->
+      {
+        undocumented.map((name) => (
+          <section class="component component--pending" id={name.toLowerCase()} data-component={name.toLowerCase()}>
+            <header class="component__header">
+              <p class="component__path">src/components/{name}.astro</p>
+              <h2>{name}</h2>
+              <p class="component__lead">Den här komponenten finns i projektet men har ingen demo här ännu. Lägg till den i <code>src/pages/components.astro</code>.</p>
+            </header>
+          </section>
+        ))
+      }
+    </main>
+  </div>
+</Layout>
+
+<script>
+  const escapeAttr = (s: string) => s.replace(/"/g, "&quot;");
+
+  // ---------- Button playground ----------
+  const btnPg = document.querySelector<HTMLElement>('[data-playground="button"]');
+  if (btnPg) {
+    const form = btnPg.querySelector("form")!;
+    const asButton = btnPg.querySelector<HTMLElement>('[data-pg-as="button"]')!;
+    const asLink = btnPg.querySelector<HTMLElement>('[data-pg-as="link"]')!;
+    const btn = asButton.querySelector<HTMLButtonElement>("button")!;
+    const link = asLink.querySelector<HTMLAnchorElement>("a")!;
+    const code = btnPg.querySelector("[data-pg-code]")!;
+
+    const update = () => {
+      const data = new FormData(form);
+      const text = String(data.get("text") || "Knapp");
+      const variant = String(data.get("variant"));
+      const disabled = data.has("disabled");
+      const isLink = data.has("href");
+
+      for (const el of [btn, link]) {
+        el.textContent = text;
+        el.className = el.className.replace(/button--\w+/, `button--${variant}`);
+      }
+      btn.disabled = disabled;
+      if (disabled) {
+        link.setAttribute("aria-disabled", "true");
+        link.setAttribute("tabindex", "-1");
+        link.removeAttribute("href");
+      } else {
+        link.removeAttribute("aria-disabled");
+        link.removeAttribute("tabindex");
+        link.setAttribute("href", "#button");
+      }
+      asButton.hidden = isLink;
+      asLink.hidden = !isLink;
+
+      const attrs = [
+        variant !== "primary" && `variant="${variant}"`,
+        isLink && `href="/"`,
+        disabled && "disabled",
+      ].filter(Boolean);
+      code.textContent = `<Button${attrs.length ? " " + attrs.join(" ") : ""}>${text}</Button>`;
+    };
+
+    form.addEventListener("input", update);
+    update();
+  }
+
+  // ---------- Input playground ----------
+  const inPg = document.querySelector<HTMLElement>('[data-playground="input"]');
+  if (inPg) {
+    const form = inPg.querySelector("form")!;
+    const label = inPg.querySelector<HTMLLabelElement>(".playground__stage label")!;
+    const input = inPg.querySelector<HTMLInputElement>(".playground__stage input")!;
+    const star = label.querySelector("span")!;
+    const code = inPg.querySelector("[data-pg-code]")!;
+
+    const update = () => {
+      const data = new FormData(form);
+      const text = String(data.get("label") || "Label");
+      const placeholder = String(data.get("placeholder") || "");
+      const type = String(data.get("type"));
+      const required = data.has("required");
+      const disabled = data.has("disabled");
+
+      Array.from(label.childNodes)
+        .filter((n) => n.nodeType === Node.TEXT_NODE)
+        .forEach((n) => n.remove());
+      label.prepend(text + " ");
+      star.hidden = !required;
+      input.type = type;
+      input.placeholder = placeholder;
+      input.required = required;
+      input.disabled = disabled;
+
+      const attrs = [
+        `label="${escapeAttr(text)}"`,
+        `name="email"`,
+        type !== "text" && `type="${type}"`,
+        placeholder && `placeholder="${escapeAttr(placeholder)}"`,
+        required && "required",
+        disabled && "disabled",
+      ].filter(Boolean);
+      code.textContent = `<Input ${attrs.join(" ")} />`;
+    };
+
+    form.addEventListener("input", update);
+    update();
+  }
+
+  // ---------- Copy code ----------
+  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const text = button.parentElement?.querySelector("code")?.textContent ?? "";
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Kopierad!";
+      } catch {
+        button.textContent = "Gick inte";
+      }
+      setTimeout(() => (button.textContent = "Kopiera"), 1500);
+    });
+  });
+
+  // ---------- Search filter ----------
+  const search = document.querySelector<HTMLInputElement>("#component-search")!;
+  const items = document.querySelectorAll<HTMLLIElement>("#component-nav li");
+  const sections = document.querySelectorAll<HTMLElement>("[data-component]");
+  const empty = document.querySelector<HTMLElement>("#component-empty")!;
+
+  search.addEventListener("input", () => {
+    const q = search.value.trim().toLowerCase();
+    let visible = 0;
+    items.forEach((li) => {
+      const match = li.dataset.name!.includes(q);
+      li.hidden = !match;
+      if (match) visible++;
+    });
+    sections.forEach((s) => (s.hidden = !s.dataset.component!.includes(q)));
+    empty.hidden = visible > 0;
+  });
+
+  // ---------- Active nav link on scroll ----------
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        links.forEach((l) => l.classList.toggle("is-active", l.hash === `#${entry.target.id}`));
+      });
+    },
+    { rootMargin: "-20% 0px -70% 0px" }
+  );
+  sections.forEach((s) => observer.observe(s));
+</script>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: 16rem minmax(0, 1fr);
+    min-height: 100vh;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: var(--space-6) var(--space-5);
+    border-right: 1px solid var(--color-border);
+    background: var(--color-white);
+  }
+
+  .sidebar__brand {
+    color: var(--color-interactive-text);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .sidebar__title {
+    margin: var(--space-6) 0 var(--space-1);
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+  }
+
+  .sidebar__count {
+    margin: 0 0 var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .sidebar__search {
+    width: 100%;
+    min-height: 2.5rem;
+    margin-bottom: var(--space-4);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-neutral-400);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+  }
+
+  .sidebar__search:focus-visible {
+    border-color: var(--color-focus);
+    box-shadow: var(--shadow-focus);
+    outline: none;
+  }
+
+  .sidebar__list {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sidebar__list a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .sidebar__list a:hover {
+    background: var(--color-interactive-surface-hover);
+  }
+
+  .sidebar__list a.is-active {
+    background: var(--color-brand-50);
+    color: var(--color-interactive-text);
+    box-shadow: inset 3px 0 0 var(--color-interactive-primary);
+  }
+
+  .sidebar__empty {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  .tag {
+    padding: 0 var(--space-2);
+    border-radius: var(--radius-full);
+    background: var(--color-neutral-100);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+
+  /* ---------- Content ---------- */
+  .content {
+    display: grid;
+    gap: var(--space-8);
+    max-width: 64rem;
+    padding: var(--space-8) var(--space-8) var(--space-16);
+  }
+
+  .component {
+    padding: var(--space-8);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+    box-shadow: var(--shadow-card);
+    scroll-margin-top: var(--space-6);
+  }
+
+  .component--pending {
+    border: 2px dashed var(--color-border);
+    box-shadow: none;
+  }
+
+  .component__path {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+  }
+
+  .component h2 {
+    margin: var(--space-1) 0 var(--space-2);
+    font-family: var(--font-family-display);
+    font-size: 2rem;
+    line-height: var(--line-height-tight);
+  }
+
+  .component__lead {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .component h3 {
+    margin: var(--space-8) 0 var(--space-4);
+    font-size: var(--font-size-base);
+    font-weight: 700;
+  }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85em;
+  }
+
+  /* Variant matrix */
+  .matrix {
+    display: grid;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+
+  .matrix__row {
+    display: grid;
+    grid-template-columns: 8rem repeat(3, minmax(9rem, 1fr));
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 36rem;
+    padding: var(--space-4);
+  }
+
+  .matrix__row + .matrix__row {
+    border-top: 1px solid var(--color-border);
+  }
+
+  .matrix__row--head {
+    padding-block: var(--space-2);
+    background: var(--color-neutral-50);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+  }
+
+  .matrix__label {
+    color: var(--color-interactive-text);
+  }
+
+  /* Input states */
+  .states {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-6);
+  }
+
+  .states__label {
+    display: block;
+    margin-bottom: var(--space-2);
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Playground */
+  .playground {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    grid-template-areas:
+      "stage controls"
+      "code code";
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .playground__stage {
+    grid-area: stage;
+    display: grid;
+    place-items: center;
+    min-height: 12rem;
+    padding: var(--space-8);
+    background-color: var(--color-neutral-50);
+    background-image: radial-gradient(var(--color-neutral-200) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .playground__stage--wide > :global(*) {
+    width: min(100%, 22rem);
+  }
+
+  .playground__controls {
+    grid-area: controls;
+    display: grid;
+    align-content: start;
+    gap: var(--space-4);
+    padding: var(--space-5);
+    border-left: 1px solid var(--color-border);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+  }
+
+  .playground__controls label {
+    display: grid;
+    gap: var(--space-1);
+  }
+
+  .playground__controls label.check {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 400;
+  }
+
+  .playground__controls input[type="text"],
+  .playground__controls select {
+    min-height: 2.25rem;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--color-neutral-400);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    font-weight: 400;
+  }
+
+  .playground__controls input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-interactive-primary);
+  }
+
+  .code {
+    grid-area: code;
+    position: relative;
+    background: var(--color-neutral-900);
+    color: var(--color-neutral-50);
+  }
+
+  .code pre {
+    margin: 0;
+    padding: var(--space-4) 7rem var(--space-4) var(--space-5);
+    overflow-x: auto;
+    font-size: var(--font-size-sm);
+  }
+
+  .code__copy {
+    position: absolute;
+    top: 50%;
+    right: var(--space-3);
+    transform: translateY(-50%);
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-neutral-600);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--color-neutral-50);
+    font-size: 0.75rem;
+  }
+
+  .code__copy:hover {
+    background: var(--color-neutral-800);
+  }
+
+  /* Props table */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  .props {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-size-sm);
+  }
+
+  .props th,
+  .props td {
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .props th {
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+
+  .props .type {
+    color: var(--color-interactive-text);
+  }
+
+  .props small {
+    display: block;
+    color: var(--color-text-muted);
+  }
+
+  .req {
+    margin-left: var(--space-2);
+    color: var(--color-brand-600);
+    font-size: 0.75rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 52rem) {
+    .gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      position: static;
+      height: auto;
+      border-right: 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .content {
+      padding: var(--space-6) var(--space-4) var(--space-12);
+    }
+
+    .component {
+      padding: var(--space-5);
+    }
+
+    .playground {
+      grid-template-columns: 1fr;
+      grid-template-areas: "stage" "controls" "code";
+    }
+
+    .playground__controls {
+      border-top: 1px solid var(--color-border);
+      border-left: 0;
+    }
+  }
+</style>

@@ -1,0 +1,735 @@
+---
+import Button from "../components/Button.astro";
+import Layout from "../layouts/Layout.astro";
+import teliaLogo from "../assets/telia/telia-logos/telia-pebble-lightmode.svg";
+import teliaLogoDark from "../assets/telia/telia-logos/telia-logo-darkmode.svg";
+import klarna from "../assets/payments/klarna.svg";
+import visaMastercard from "../assets/payments/visa_mastercard_small_darkmode.svg";
+import swish from "../assets/payments/Swish - Text White.svg";
+import searchIcon from "../assets/icons/purpur/search.svg?raw";
+import cartIcon from "../assets/icons/purpur/cart.svg?raw";
+import userIcon from "../assets/icons/purpur/end-user.svg?raw";
+import menuIcon from "../assets/icons/purpur/menu.svg?raw";
+import sparklesIcon from "../assets/icons/purpur/sparkles.svg?raw";
+import checkIcon from "../assets/icons/purpur/checkmark.svg?raw";
+import arrowRight from "../assets/icons/purpur/arrow-right.svg?raw";
+import chevronDown from "../assets/icons/purpur/chevron-down.svg?raw";
+import linkedin from "../assets/icons/purpur/linkedin.svg?raw";
+import facebook from "../assets/icons/purpur/facebook.svg?raw";
+import youtube from "../assets/icons/purpur/youtube.svg?raw";
+
+const img = "https://www.telia.se/images/transform";
+const heroImage = `${img}/cfe6a2d1-24a0-430d-bba3-12899e5c98d4/Telia_Company_Reinvention_76`;
+const offerImage = `${img}/dd89b176-6cd4-4433-b081-a7c357d2c00c/Telia_Company_Reinvention_78?io=transform:fill&focuspoint=0.43,0.49`;
+
+const products = [
+  { label: "Mobiltelefoni", href: "/support/mobiltelefoni" },
+  { label: "Bredband", href: "/support/bredband" },
+  { label: "Tv och streaming", href: "/support/tv-och-streaming" },
+  { label: "Fast telefoni", href: "/support/fast-telefoni" },
+  { label: "Appar och tjänster", href: "/support/appar-och-tjanster" },
+  { label: "Kontakt", href: "/privat/kontakt" },
+];
+
+const services = [
+  { label: "Felsökning och driftinformation", href: "/support/felsokning-och-driftinformation" },
+  { label: "Service och reparation", href: "/support/service-och-reparation" },
+  { label: "Faktura och betalning", href: "/support/faktura-och-betalning" },
+  { label: "Köpinformation", href: "/support/kopinformation" },
+  { label: "Hantera abonnemang", href: "/support/avsluta-och-andra" },
+  { label: "Dina rättigheter", href: "/privat/om/integritetspolicy/dina-rattigheter" },
+];
+
+const faqs = [
+  "Var hittar jag era guider för alla streamingtjänster?",
+  "Jag har inte fått aktiveringslänken för min streamingtjänst?",
+  "Jag är osäker om mitt mejl eller sms kommer från Telia. Vad ska jag göra?",
+  "Hur ansöker jag om e-faktura?",
+  "Hur ansöker jag om autogiro?",
+  "Hur förbättrar jag wifi-täckning och hastighet hemma?",
+  "Jag har uppgraderat hastigheten på mitt bredband, varför märker jag ingen skillnad?",
+  "Hur beställer eller aktiverar jag ett nytt simkort?",
+  "Jag ser inte längre undertexter på svenska. Vad ska jag göra?",
+  "Jag har skapat en felanmälan – var ser jag status?",
+  "Hur och under vilka tider kan jag kontakta er?",
+];
+
+const footerGroups = ["Rekommenderat", "Det är Telia", "Handla hos Telia", "Hållbarhet"];
+---
+
+<Layout title="Support – Telia.se" description="Se svar på vanliga frågor, följ guider för våra produkter och tjänster och få hjälp att felsöka via vårt verktyg Fixa.">
+  <a class="skip" href="#main">Gå till sidans innehåll</a>
+
+  <div class="campaign">
+    Black Week 2026 närmar sig.&nbsp;<a href="/erbjudanden"><strong>Läs mer</strong></a>.
+  </div>
+
+  <header class="header">
+    <a href="/" class="header__logo" aria-label="Startsida">
+      <img src={teliaLogo.src} alt="Telia" width="32" height="32" />
+    </a>
+    <div class="header__actions">
+      <button class="icon-btn" type="button" aria-label="Sök" set:html={searchIcon} />
+      <button class="icon-btn" type="button" aria-label="Varukorg" set:html={cartIcon} />
+      <a class="icon-btn" href="/mitt-telia/start" aria-label="Mitt Telia" set:html={userIcon} />
+      <a class="ai-btn" href="#">
+        <span class="ai-btn__icon" set:html={sparklesIcon} />
+        Fråga Telia AI
+      </a>
+      <button class="icon-btn" type="button" aria-label="Meny" set:html={menuIcon} />
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Brödsmula">
+          <a href="/">Telia.se</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Support</span>
+        </nav>
+        <h1>Vad kan vi hjälpa dig med?</h1>
+        <p>Se svar på vanliga frågor, följ guider för våra produkter och tjänster och få hjälp att felsöka via vårt verktyg Fixa.</p>
+      </div>
+    </section>
+
+    <section class="fixa container">
+      <img class="fixa__image" src={heroImage} alt="Felsökning och driftinformation" width="819" height="546" />
+      <h2>Med vårt verktyg Fixa kan du på egen hand förbättra, felsöka och felanmäla din tjänst.</h2>
+      <ul class="checklist">
+        {["Slipp telefonköer – få hjälp direkt", "Felsök när det passar dig", "Löser 8 av 10 problem direkt"].map((t) => (
+          <li><span set:html={checkIcon} />{t}</li>
+        ))}
+      </ul>
+      <Button href="#">
+        Logga in för att fixa din tjänst
+        <Fragment set:html={arrowRight} />
+      </Button>
+    </section>
+
+    <section class="container block">
+      <h2>Produkter och tjänster</h2>
+      <ul class="tiles tiles--large">
+        {products.map((p) => (
+          <li>
+            <a href={p.href} class="tile">
+              <span class="tile__row"><h3>{p.label}</h3><span class="tile__arrow" set:html={arrowRight} /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="container block">
+      <h2>Service och information</h2>
+      <ul class="tiles tiles--small">
+        {services.map((s) => (
+          <li>
+            <a href={s.href} class="tile tile--row">
+              <h3>{s.label}</h3>
+              <span class="tile__arrow" set:html={arrowRight} />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="container block">
+      <div class="offer">
+        <div class="offer__text">
+          <span class="badge">Erbjudande</span>
+          <h2>Få upp till 1 200 kr/år i samlingsrabatt</h2>
+          <p>När du samlar både bredband och mobilabonnemang hos oss.</p>
+          <Button variant="secondary" href="https://www.telia.se/erbjudanden/samlingsrabatt" class="offer__cta">
+            Läs mer om erbjudandet
+            <Fragment set:html={arrowRight} />
+          </Button>
+        </div>
+        <img src={offerImage} alt="Kvinna och man sitter på en uteservering och tar en selfie tillsammans och ler." width="410" height="328" loading="lazy" />
+      </div>
+    </section>
+
+    <section class="faq">
+      <div class="container">
+        <h2>Vanliga frågor och svar</h2>
+        <ul class="faq__list">
+          {faqs.map((q) => (
+            <li>
+              <h3>
+                <button type="button" aria-expanded="false">
+                  <span>{q}</span>
+                  <span class="chevron" set:html={chevronDown} />
+                </button>
+              </h3>
+              <div class="faq__answer" hidden>
+                <p>Svaret visas här i prototypen. Fyll på med innehåll när du itererar.</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <img src={teliaLogoDark.src} alt="Telia" width="82" height="32" />
+        <div class="footer__social">
+          <a href="#" aria-label="LinkedIn" set:html={linkedin} />
+          <a href="#" aria-label="Facebook" set:html={facebook} />
+          <a href="#" aria-label="YouTube" set:html={youtube} />
+        </div>
+      </div>
+    </div>
+    <div class="footer__groups">
+      {footerGroups.map((g) => (
+        <div class="footer__group">
+          <button type="button" aria-expanded="false">
+            <span>{g}</span>
+            <span class="chevron" set:html={chevronDown} />
+          </button>
+        </div>
+      ))}
+    </div>
+    <div class="container footer__bottom">
+      <div class="footer__payments">
+        <img src={klarna.src} alt="Klarna" height="24" />
+        <img src={visaMastercard.src} alt="Visa och Mastercard" height="24" />
+        <img src={swish.src} alt="Swish" height="24" />
+      </div>
+      <div class="footer__legal">
+        <div>
+          <p><strong>© Telia Sverige AB 556430-0142</strong></p>
+          <p>Säte: Stockholm</p>
+        </div>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>(".faq__list button, .footer__group button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      const panel = btn.closest("li")?.querySelector<HTMLElement>(".faq__answer");
+      if (panel) panel.hidden = open;
+    });
+  });
+</script>
+
+<style>
+  :global(body) {
+    background: var(--color-white);
+    color: rgba(0, 0, 0, 0.84);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 1248px;
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+  }
+
+  .skip {
+    position: absolute;
+    left: -999px;
+  }
+
+  .skip:focus {
+    left: var(--space-4);
+    top: var(--space-4);
+    z-index: 100;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-white);
+  }
+
+  .campaign {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-brand-950);
+    color: var(--color-white);
+    text-align: center;
+  }
+
+  .campaign a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    height: 4.25rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--space-6);
+    background: var(--color-white);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .header__logo img {
+    display: block;
+    height: 2rem;
+    width: auto;
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: rgba(0, 0, 0, 0.84);
+    cursor: pointer;
+  }
+
+  .icon-btn:hover {
+    background: var(--color-interactive-surface-hover);
+  }
+
+  .icon-btn :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .ai-btn {
+    display: inline-flex;
+    height: 3rem;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-5);
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    background:
+      linear-gradient(var(--color-white), var(--color-white)) padding-box,
+      linear-gradient(90deg, #990ae3, #4e0174) border-box;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .ai-btn__icon :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-brand-600);
+  }
+
+  .hero {
+    padding-block: var(--space-4) 5.25rem;
+    background: var(--color-brand-950);
+    color: var(--color-brand-100);
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-1);
+    font-weight: 500;
+  }
+
+  .breadcrumb a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 400;
+  }
+
+  .hero h1 {
+    margin: 4.5rem 0 var(--space-6);
+    font-family: var(--font-family-display);
+    font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .hero p {
+    max-width: 52rem;
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .fixa {
+    display: grid;
+    gap: var(--space-4);
+    padding-block: 4rem 3rem;
+    grid-template-columns: 1fr;
+  }
+
+  .fixa__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    aspect-ratio: 3 / 2;
+    margin-bottom: var(--space-4);
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 1.625rem;
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .checklist {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 var(--space-6);
+    padding: 0;
+    list-style: none;
+    font-size: 1.125rem;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .checklist :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+  }
+
+  .fixa :global(.button) {
+    justify-self: start;
+  }
+
+  .block {
+    padding-block: var(--space-12) 0;
+  }
+
+  .block > h2 {
+    margin-bottom: var(--space-8);
+  }
+
+  .tiles {
+    display: grid;
+    gap: var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tiles--large {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tiles--small {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tile {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    gap: var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid var(--color-neutral-200);
+    border-radius: var(--radius-md);
+    background: var(--color-neutral-50);
+    color: inherit;
+    text-decoration: none;
+    transition: background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .tile:hover {
+    background: var(--color-interactive-surface-hover);
+    border-color: var(--color-interactive-primary);
+  }
+
+  .tile__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+
+  .tile h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .tile__arrow :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .tile--row {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-4);
+    padding-block: var(--space-3);
+  }
+
+  .tile--row h3 {
+    flex: 1;
+  }
+
+  .offer {
+    display: grid;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--color-brand-950);
+    color: var(--color-white);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .offer__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-6);
+  }
+
+  .offer h2 {
+    max-width: 22rem;
+  }
+
+  .offer p {
+    margin: 0;
+  }
+
+  .offer :global(.offer__cta) {
+    background: var(--color-brand-100);
+    box-shadow: none;
+    color: var(--color-brand-900);
+  }
+
+  .offer img {
+    width: 100%;
+    height: 100%;
+    min-height: 16rem;
+    object-fit: cover;
+  }
+
+  .badge {
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-100);
+    color: var(--color-brand-900);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .faq {
+    margin-top: 4.5rem;
+    padding-block: 4.5rem;
+    background: var(--color-neutral-50);
+  }
+
+  .faq h2 {
+    margin-bottom: var(--space-8);
+  }
+
+  .faq__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--color-neutral-200);
+  }
+
+  .faq__list li {
+    border-bottom: 1px solid var(--color-neutral-200);
+  }
+
+  .faq__list h3 {
+    margin: 0;
+  }
+
+  .faq__list button {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-6) var(--space-6) 0;
+    border: 0;
+    background: transparent;
+    color: var(--color-brand-800);
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: left;
+  }
+
+  .chevron :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    flex: none;
+    transition: transform 160ms ease;
+  }
+
+  button[aria-expanded="true"] .chevron :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .faq__answer {
+    padding: 0 var(--space-6) var(--space-6) 0;
+  }
+
+  .faq__answer p {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .footer {
+    background: var(--color-brand-950);
+    color: var(--color-white);
+  }
+
+  .footer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-8);
+  }
+
+  .footer__top img {
+    height: 2rem;
+    width: auto;
+  }
+
+  .footer__social {
+    display: flex;
+    gap: var(--space-6);
+  }
+
+  .footer__social a {
+    color: inherit;
+  }
+
+  .footer__social :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .footer__groups {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .footer__group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .footer__group button {
+    display: flex;
+    width: 100%;
+    max-width: 1248px;
+    margin-inline: auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-5) var(--space-6);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .footer__bottom {
+    padding-block: var(--space-8);
+  }
+
+  .footer__payments {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+
+  .footer__payments img {
+    display: block;
+    height: 1.5rem;
+    width: auto;
+  }
+
+  .footer__legal {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .footer__legal p {
+    margin: 0 0 var(--space-2);
+  }
+
+  .footer__legal a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  @media (max-width: 720px) {
+    .ai-btn {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tiles--large,
+    .tiles--small,
+    .offer {
+      grid-template-columns: 1fr;
+    }
+
+    .offer img {
+      min-height: 12rem;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .hero {
+      padding-bottom: 6.5rem;
+    }
+
+    .fixa {
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--space-12);
+      align-items: start;
+    }
+
+    .fixa__image {
+      grid-row: 1 / span 3;
+      margin: 0;
+    }
+
+    .fixa h2 {
+      font-size: 2rem;
+      align-self: end;
+    }
+  }
+</style>

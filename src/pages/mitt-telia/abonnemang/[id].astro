@@ -1,0 +1,394 @@
+---
+import MittTeliaLayout from "../../../layouts/MittTeliaLayout.astro";
+import { subscriptions } from "../../../data/subscriptions";
+import chevronRight from "../../../assets/icons/purpur/chevron-right.svg?raw";
+import chevronLeft from "../../../assets/icons/purpur/chevron-left.svg?raw";
+import calendar from "../../../assets/icons/purpur/calendar.svg?raw";
+import pieChart from "../../../assets/icons/purpur/pie-chart.svg?raw";
+import search from "../../../assets/icons/purpur/search.svg?raw";
+import phone from "../../../assets/icons/purpur/phone.svg?raw";
+import sms from "../../../assets/icons/purpur/sms.svg?raw";
+import smartphone from "../../../assets/icons/purpur/smartphone.svg?raw";
+import moneyKr from "../../../assets/icons/purpur/money-kr.svg?raw";
+import wallet from "../../../assets/icons/purpur/wallet.svg?raw";
+import info from "../../../assets/icons/purpur/info.svg?raw";
+
+export function getStaticPaths() {
+  return subscriptions.map((subscription) => ({
+    params: { id: subscription.id },
+    props: { subscription },
+  }));
+}
+
+const { subscription: s } = Astro.props;
+
+const subTabs = ["Översikt", "Tjänster", "Inställningar"];
+const links = ["Uppgradera abonnemang", "Lägg till extra användare", "Förläng abonnemang", "Överlåt abonnemang"];
+---
+
+<MittTeliaLayout title={`${s.name} – Mitt Telia`} description={`Detaljer för abonnemanget ${s.name}.`}>
+  <div slot="hero">
+    <a class="back" href="/mitt-telia">
+      <span class="back__icon" set:html={chevronLeft} />
+      <span>Tillbaka till Mitt Telia</span>
+    </a>
+    <h1>{s.name}</h1>
+    {s.number && <p>{s.number}</p>}
+    <div class="subtabs" role="tablist">
+      {subTabs.map((t, i) => (
+        <button type="button" role="tab" class="subtabs__item" aria-selected={i === 0 ? "true" : "false"} data-tab={i}>
+          {t}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="container panels">
+    <div data-panel="0">
+      <div class="banner">
+        <svg viewBox="0 0 64 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round">
+          <path d="M32 16c-4-7-9-11-15-11a11 11 0 1 0 0 22c6 0 11-4 15-11s9-11 15-11a11 11 0 1 1 0 22c-6 0-11-4-15-11Z" />
+        </svg>
+        <span>{s.banner}</span>
+      </div>
+
+      {s.surf && (
+        <>
+          <h2>Surf</h2>
+          <ul class="list">
+            <li class="item">
+              <span class="item__icon" set:html={calendar} />
+              <span class="item__label">Ny surfmängd om</span>
+              <span class="item__value">{s.surf.resetInDays} dagar</span>
+            </li>
+            <li class="item">
+              <span class="item__icon" set:html={pieChart} />
+              <span class="item__label">Total surf kvar</span>
+              <span class="item__value">{s.surf.left}</span>
+            </li>
+          </ul>
+          <ul class="list">
+            <li class="item">
+              <span class="item__icon" set:html={calendar} />
+              <span class="item__label">EU/EES-surf kvar</span>
+              <span class="item__value">{s.surf.euLeft}</span>
+            </li>
+          </ul>
+
+          <h2>Surf- &amp; samtalspaket</h2>
+          <ul class="list">
+            <li>
+              <a class="item item--link" href="#">
+                <span class="item__icon" set:html={search} />
+                <span class="item__label">
+                  Sök resmål
+                  <small>Här kan du köpa surf- &amp; samtalspaket</small>
+                </span>
+                <span class="item__arrow" set:html={chevronRight} />
+              </a>
+            </li>
+          </ul>
+          <a class="more" href="#">Läs mer om Surfpaket här</a>
+        </>
+      )}
+
+      {s.calls && (
+        <>
+          <h2>Samtal och SMS</h2>
+          <ul class="list">
+            <li class="item">
+              <span class="item__icon" set:html={phone} />
+              <span class="item__label">Minuter ringda</span>
+              <span class="item__value">{s.calls.minutes}</span>
+            </li>
+            <li class="item">
+              <span class="item__icon" set:html={sms} />
+              <span class="item__label">SMS skickade</span>
+              <span class="item__value">{s.calls.sms}</span>
+            </li>
+          </ul>
+        </>
+      )}
+
+      {s.variableCost && (
+        <>
+          <h2>Övriga kostnader</h2>
+          <ul class="list">
+            <li>
+              <a class="item item--link" href="#">
+                <span class="item__label">
+                  Rörliga avgifter
+                  <small>Nuvarande fakturaperiod</small>
+                </span>
+                <span class="item__value">{s.variableCost}</span>
+                <span class="item__arrow" set:html={chevronRight} />
+              </a>
+            </li>
+            <li>
+              <a class="item item--link" href="#">
+                <span class="item__label">
+                  Kostnadshistorik
+                  <small>Utlandssamtal, betalsamtal och sms</small>
+                </span>
+                <span class="item__arrow" set:html={chevronRight} />
+              </a>
+            </li>
+          </ul>
+        </>
+      )}
+
+      <h2>Länkar</h2>
+      <ul class="list">
+        {links.map((l) => (
+          <li>
+            <a class="item item--link" href="#">
+              <span class="item__label">{l}</span>
+              <span class="item__arrow" set:html={chevronRight} />
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <h2>Info</h2>
+      <ul class="list">
+        <li class="item">
+          <span class="item__icon" set:html={smartphone} />
+          <span class="item__label">
+            <small>Abonnemang</small>
+            {s.plan}
+          </span>
+        </li>
+        <li class="item">
+          <span class="item__icon" set:html={calendar} />
+          <span class="item__label">Bindningstid</span>
+          <span class="item__value">{s.binding}</span>
+        </li>
+        <li class="item">
+          <span class="item__icon" set:html={calendar} />
+          <span class="item__label">Uppsägningstid</span>
+          <span class="item__value">{s.notice}</span>
+        </li>
+        <li class="item">
+          <span class="item__icon" set:html={moneyKr} />
+          <span class="item__label">Pris</span>
+          <span class="item__value">{s.price}</span>
+        </li>
+        {s.discount && (
+          <li class="notice">
+            <span class="notice__icon" set:html={info} />
+            <span>Rabatterat pris gäller till: {s.discount.until}. Ordinarie pris {s.discount.ordinary}.</span>
+          </li>
+        )}
+        <li class="item">
+          <span class="item__icon" set:html={wallet} />
+          <span class="item__label">Betalsätt</span>
+          <span class="item__value">{s.payment}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div data-panel="1" hidden>
+      <h2>Tjänster</h2>
+      <p class="placeholder">Tjänster för {s.name} visas här i prototypen.</p>
+    </div>
+
+    <div data-panel="2" hidden>
+      <h2>Inställningar</h2>
+      <p class="placeholder">Inställningar för {s.name} visas här i prototypen.</p>
+    </div>
+  </div>
+</MittTeliaLayout>
+
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>(".subtabs__item");
+  const panels = document.querySelectorAll<HTMLElement>("[data-panel]");
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+      panels.forEach((p) => (p.hidden = p.dataset.panel !== tab.dataset.tab));
+    });
+  });
+</script>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 38rem;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+    color: inherit;
+    font-size: var(--font-size-sm);
+  }
+
+  .back__icon {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+    background: var(--color-brand-100);
+    color: var(--color-brand-800);
+  }
+
+  .back__icon :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .subtabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-1);
+    margin: var(--space-4) calc(var(--space-4) * -0) calc(var(--space-6) * -1);
+  }
+
+  .subtabs__item {
+    padding: var(--space-3) var(--space-2);
+    border: 0;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background: var(--color-brand-100);
+    color: var(--color-interactive-text);
+    font: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .subtabs__item[aria-selected="true"] {
+    background: var(--color-neutral-50);
+    color: var(--color-text);
+  }
+
+  .panels {
+    padding-block: var(--space-8) var(--space-16);
+  }
+
+  .banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, var(--color-brand-600), var(--color-brand-950));
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+  }
+
+  .banner svg {
+    width: 4rem;
+    height: 2rem;
+  }
+
+  h2 {
+    margin: var(--space-8) 0 var(--space-3);
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+  }
+
+  .list {
+    margin: 0 0 var(--space-3);
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    list-style: none;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    color: inherit;
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+  }
+
+  .list > li + li {
+    border-top: 1px solid var(--color-neutral-100);
+  }
+
+  .item--link:hover {
+    background: var(--color-neutral-50);
+  }
+
+  .item--link:focus-visible {
+    outline: none;
+    box-shadow: inset var(--shadow-focus);
+  }
+
+  .item__icon,
+  .item__arrow {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .item__icon :global(svg),
+  .item__arrow :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .item__label {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+  }
+
+  .item__label small {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 0.75rem;
+  }
+
+  .item__value {
+    font-size: 0.75rem;
+  }
+
+  .more {
+    display: block;
+    padding: var(--space-3) var(--space-4);
+    color: var(--color-interactive-text);
+    font-size: 0.75rem;
+    text-align: right;
+  }
+
+  .notice {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-1) var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border: 2px solid #0a7bc4;
+    border-radius: var(--radius-sm);
+    background: #f1f8fd;
+    font-size: var(--font-size-sm);
+  }
+
+  .notice__icon {
+    display: inline-flex;
+    flex: none;
+    color: #0a7bc4;
+  }
+
+  .notice__icon :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .placeholder {
+    padding-inline: var(--space-3);
+    color: var(--color-text-muted);
+  }
+</style>

@@ -1,0 +1,455 @@
+---
+import Button from "../components/Button.astro";
+import MittTeliaLayout from "../layouts/MittTeliaLayout.astro";
+import { subscriptions } from "../data/subscriptions";
+import checkIcon from "../assets/icons/purpur/checkmark.svg?raw";
+import chevronRight from "../assets/icons/purpur/chevron-right.svg?raw";
+import invoiceIcon from "../assets/icons/purpur/invoice.svg?raw";
+import smartphoneIcon from "../assets/icons/purpur/smartphone.svg?raw";
+import cloudIcon from "../assets/icons/purpur/cloud.svg?raw";
+import plusIcon from "../assets/icons/purpur/add.svg?raw";
+import tagIcon from "../assets/icons/purpur/tag.svg?raw";
+import supportIcon from "../assets/icons/purpur/support.svg?raw";
+import smartWifi from "../assets/icons/purpur/smart-wifi.svg?raw";
+import samsungS26 from "../../assets/samsung-s26.webp";
+
+const img = "https://www.telia.se/images/transform";
+const catImage = `${img}/cfe6a2d1-24a0-430d-bba3-12899e5c98d4/Telia_Company_Reinvention_76`;
+const coupleImage = `${img}/dd89b176-6cd4-4433-b081-a7c357d2c00c/Telia_Company_Reinvention_78?io=transform:fill&focuspoint=0.43,0.49`;
+
+const icons = { smartphone: smartphoneIcon, add: plusIcon, cloud: cloudIcon };
+
+const offers = [
+  {
+    badge: "Nyhet",
+    title: "Nya Samsung Galaxy S26 – förbeställ nu.",
+    text: "Välj Galaxy S26 tillsammans med ett abonnemang från Telia och få ett förmånligt pris varje månad.",
+    cta: "Se erbjudandet",
+    image: samsungS26.src,
+  },
+  {
+    badge: "Black Week-deal",
+    title: "Halva priset på hela hastigheten, och hela underhållningen.",
+    text: "Under Black Week får du vårt populära bredband 300/300 Mbit/s och streaming Maxad till halva priset.",
+    cta: "Handla här",
+    image: catImage,
+  },
+  {
+    badge: "Black Week-deal",
+    title: "Upp till halva priset på vårt populära bredband.",
+    text: "Nu är det dags att maxa både surfhastigheten och besparingen. Under Black Week får du rejäl rabatt på vårt populära bredband.",
+    cta: "Se ditt pris",
+  },
+  {
+    title: "Bredband till kampanjpris i ett helt år – spara upp till 3 480 kronor.",
+    text: "Just nu erbjuder vi kampanjpris på alla våra hastigheter.",
+    cta: "Välj din hastighet – se ditt pris",
+    image: coupleImage,
+  },
+  {
+    title: "Bredband och tv till kampanjpris i ett helt år – spara upp till 5 868 kronor.",
+    text: "Just nu erbjuder vi kampanjpris på alla våra hastigheter när du köper bredband tillsammans med vårt populära tv-paket Mellan.",
+    cta: "Välj din hastighet – se ditt pris",
+    image: coupleImage,
+  },
+];
+---
+
+<MittTeliaLayout title="Mitt Telia – Telia prototyp" description="Inloggad översikt med aktuellt, abonnemang, support och personliga erbjudanden.">
+  <div slot="hero">
+    <h1>Mitt Telia</h1>
+    <p>Välkommen, Erik!</p>
+  </div>
+
+  <section class="section section--white">
+    <div class="container">
+      <h2>Aktuellt</h2>
+      <ul class="stack">
+        <li>
+          <a href="#" class="row">
+            <span class="row__icon row__icon--soft" set:html={invoiceIcon} />
+            <span class="row__text">
+              <strong>1 ohanterad betalning</strong>
+              <span>Gå till fakturor</span>
+            </span>
+            <span class="row__arrow" set:html={chevronRight} />
+          </a>
+        </li>
+        <li>
+          <a href="#" class="row row--promo">
+            <span class="row__icon row__icon--white" set:html={tagIcon} />
+            <span class="row__text">
+              <strong>Black Week hos Telia.</strong>
+              <span>Passa på att fynda allt från mobiler och abonnemang till bredband, tv- och streamingpaket.</span>
+            </span>
+            <span class="row__arrow" set:html={chevronRight} />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Abonnemang</h2>
+      <ul class="stack stack--two">
+        {subscriptions.map((s) => (
+          <li>
+            <a href={`/mitt-telia/abonnemang/${s.id}`} class="row">
+              <span class="row__icon" set:html={icons[s.icon]} />
+              <span class="row__text">
+                <strong>{s.name}</strong>
+                {s.number && <span>{s.number}</span>}
+              </span>
+              <span class="row__arrow" set:html={chevronRight} />
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <a href="#" class="reward">
+        <span class="reward__label">
+          <span class="reward__icon" set:html={tagIcon} />
+          Du är halvvägs till Samlingsrabatt
+        </span>
+        <span class="reward__text">Köp Bredband från Telia för att få 100kr i Samlingsrabatt</span>
+        <span class="row__arrow" set:html={chevronRight} />
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <a href="#" class="support">
+        <span class="support__head">
+          <span class="support__icon" set:html={supportIcon} />
+          <strong>Behöver du support?</strong>
+          <span class="row__arrow" set:html={chevronRight} />
+        </span>
+        <p>Med vårt verktyg Fixa kan du på egen hand förbättra, felsöka och felanmäla din tjänst.</p>
+        <ul class="checklist">
+          {["Slipp telefonköer – få hjälp direkt", "Felsök när det passar dig", "Löser 8 av 10 problem direkt"].map((t) => (
+            <li><span set:html={checkIcon} />{t}</li>
+          ))}
+        </ul>
+      </a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2>Personliga erbjudanden</h2>
+      <ul class="stack stack--wide">
+        {offers.map((o) => (
+          <li class="offer">
+            <div class="offer__body">
+              {o.badge && (
+                <span class="badge"><span set:html={tagIcon} />{o.badge}</span>
+              )}
+              <h3>{o.title}</h3>
+              <p>{o.text}</p>
+              <Button href="#">{o.cta}</Button>
+            </div>
+            {o.image ? (
+              <img class="offer__media" src={o.image} alt="" loading="lazy" />
+            ) : (
+              <div class="offer__media offer__media--wifi" set:html={smartWifi} />
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</MittTeliaLayout>
+
+<style>
+  .container {
+    width: 100%;
+    max-width: 38rem;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  h2 {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-family-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .stack {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stack--wide {
+    gap: var(--space-4);
+  }
+
+  .stack--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  :global(html[data-version="1"]) .stack--two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stack--two .row {
+    height: 100%;
+  }
+
+  .stack--two .row__text strong,
+  .stack--two .row__text span {
+    overflow-wrap: anywhere;
+  }
+
+  .section {
+    padding-block: var(--space-8);
+  }
+
+  .section--white {
+    background: var(--color-white);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .row:hover {
+    box-shadow: var(--shadow-card);
+  }
+
+  .row:focus-visible,
+  .reward:focus-visible,
+  .support:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  .row--promo {
+    border-color: transparent;
+    background: var(--color-brand-100);
+  }
+
+  .row__icon {
+    display: inline-flex;
+    flex: none;
+    width: 2.25rem;
+    height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--color-brand-800);
+    color: var(--color-white);
+  }
+
+  .row__icon--soft {
+    background: var(--color-brand-100);
+    color: var(--color-brand-800);
+  }
+
+  .row__icon--white {
+    background: var(--color-white);
+    color: var(--color-brand-950);
+  }
+
+  .row__icon :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .row__text {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+    font-size: var(--font-size-sm);
+  }
+
+  .row__text span {
+    color: rgba(0, 0, 0, 0.7);
+  }
+
+  .row__arrow {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .row__arrow :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .reward {
+    display: flex;
+    align-items: stretch;
+    margin-top: var(--space-4);
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-brand-100);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .reward__label {
+    display: flex;
+    flex: 0 0 45%;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3);
+    background: var(--color-brand-800);
+    color: var(--color-white);
+    font-weight: 700;
+    line-height: 1.2;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  }
+
+  .reward__icon :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .reward__text {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    padding: var(--space-3);
+    font-size: var(--font-size-sm);
+  }
+
+  .reward .row__arrow {
+    align-items: center;
+    padding-right: var(--space-3);
+    color: var(--color-brand-800);
+  }
+
+  .support {
+    display: block;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .support__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: 1.125rem;
+  }
+
+  .support__head strong {
+    flex: 1;
+  }
+
+  .support__icon :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .support p {
+    margin: var(--space-3) 0;
+    font-size: var(--font-size-sm);
+  }
+
+  .checklist {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--font-size-sm);
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .checklist :global(svg) {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-brand-800);
+  }
+
+  .offer {
+    display: grid;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-brand-100);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .offer__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+
+  .offer h3 {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 1.125rem;
+    line-height: 1.2;
+  }
+
+  .offer p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    background: var(--color-brand-950);
+    color: var(--color-white);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge :global(svg) {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .offer__media {
+    width: 100%;
+    height: 100%;
+    min-height: 14rem;
+    object-fit: cover;
+  }
+
+  .offer__media--wifi {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-brand-950), var(--color-brand-700));
+    color: var(--color-brand-300);
+  }
+
+  .offer__media--wifi :global(svg) {
+    width: 45%;
+    height: auto;
+  }
+</style>

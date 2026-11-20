@@ -1,0 +1,454 @@
+---
+import Layout from "./Layout.astro";
+import teliaLogo from "../assets/telia/telia-logos/telia-pebble-lightmode.svg";
+import teliaWordmark from "../assets/telia/telia-logos/telia-logo-lightmode.svg";
+import klarna from "../assets/payments/klarna.svg";
+import visaMastercard from "../assets/payments/visa_mastercard_small_darkmode.svg";
+import swish from "../assets/payments/Swish - Text White.svg";
+import searchIcon from "../assets/icons/purpur/search.svg?raw";
+import cartIcon from "../assets/icons/purpur/cart.svg?raw";
+import userIcon from "../assets/icons/purpur/end-user.svg?raw";
+import menuIcon from "../assets/icons/purpur/menu.svg?raw";
+import sparklesIcon from "../assets/icons/purpur/sparkles.svg?raw";
+import chevronDown from "../assets/icons/purpur/chevron-down.svg?raw";
+import homeIcon from "../assets/icons/purpur/home.svg?raw";
+import linkedin from "../assets/icons/purpur/linkedin.svg?raw";
+import facebook from "../assets/icons/purpur/facebook.svg?raw";
+import youtube from "../assets/icons/purpur/youtube.svg?raw";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+
+const tabs = [
+  { label: "Mitt Telia", active: true },
+  { label: "Fakturor" },
+  { label: "Handla" },
+  { label: "Förmåner" },
+  { label: "Mer" },
+];
+
+const footerGroups = ["Rekommenderat", "Det är Telia", "Handla hos Telia", "Hållbarhet"];
+---
+
+<Layout title={title} description={description}>
+  <script is:inline>
+    document.documentElement.dataset.version = localStorage.getItem("mitt-telia-version") || "2";
+  </script>
+  <div class="campaign">
+    <strong>Black Week</strong>&nbsp;pågår för fullt!&nbsp;<a href="#"><strong>Se våra deals.</strong></a>
+  </div>
+
+  <header class="header">
+    <a href="/" class="header__logo" aria-label="Startsida">
+      <img src={teliaLogo.src} alt="Telia" width="32" height="32" />
+    </a>
+    <label class="version">
+      <span class="version__label">Version</span>
+      <select class="version__select" id="version-select">
+        <option value="1">Ver1</option>
+        <option value="2">Ver2</option>
+      </select>
+    </label>
+    <div class="header__actions">
+      <button class="icon-btn" type="button" aria-label="Sök" set:html={searchIcon} />
+      <button class="icon-btn" type="button" aria-label="Varukorg" set:html={cartIcon} />
+      <a class="icon-btn icon-btn--active" href="/mitt-telia" aria-label="Mitt Telia" set:html={userIcon} />
+      <a class="ai-btn" href="#">
+        <span class="ai-btn__icon" set:html={sparklesIcon} />
+        Fråga Telia AI
+      </a>
+      <button class="icon-btn" type="button" aria-label="Meny" set:html={menuIcon} />
+    </div>
+  </header>
+
+  <section class="hero">
+    <nav class="tabs" aria-label="Mitt Telia">
+      {tabs.map((t) => (
+        <a href="/mitt-telia" class:list={["tabs__item", { "tabs__item--active": t.active }]} aria-current={t.active ? "page" : undefined}>
+          {t.active && <span class="tabs__icon" set:html={homeIcon} />}
+          {t.label}
+        </a>
+      ))}
+    </nav>
+    <div class="hero__text">
+      <slot name="hero" />
+    </div>
+  </section>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__top">
+        <img class="footer__logo" src={teliaWordmark.src} alt="Telia" height="32" />
+        <div class="footer__social">
+          <a href="#" aria-label="LinkedIn" set:html={linkedin} />
+          <a href="#" aria-label="Facebook" set:html={facebook} />
+          <a href="#" aria-label="YouTube" set:html={youtube} />
+        </div>
+      </div>
+    </div>
+    <div class="footer__groups">
+      {footerGroups.map((g) => (
+        <div class="footer__group">
+          <button type="button" aria-expanded="false">
+            <span>{g}</span>
+            <span class="chevron" set:html={chevronDown} />
+          </button>
+          <div class="footer__panel" hidden>
+            <p>Länkar visas här i prototypen.</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="container footer__bottom">
+      <div class="footer__payments">
+        <img src={klarna.src} alt="Klarna" height="24" />
+        <img src={visaMastercard.src} alt="Visa och Mastercard" height="24" />
+        <img src={swish.src} alt="Swish" height="24" />
+      </div>
+      <div class="footer__legal">
+        <div>
+          <p><strong>© Telia Sverige AB 556430-0142</strong></p>
+          <p>Säte: Stockholm</p>
+        </div>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </footer>
+</Layout>
+
+<script>
+  const select = document.querySelector<HTMLSelectElement>("#version-select");
+  if (select) {
+    select.value = document.documentElement.dataset.version ?? "2";
+    select.addEventListener("change", () => {
+      document.documentElement.dataset.version = select.value;
+      localStorage.setItem("mitt-telia-version", select.value);
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>(".footer__group button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const open = btn.getAttribute("aria-expanded") === "true";
+      btn.setAttribute("aria-expanded", String(!open));
+      const panel = btn.parentElement?.querySelector<HTMLElement>(".footer__panel");
+      if (panel) panel.hidden = open;
+    });
+  });
+</script>
+
+<style>
+  :global(body) {
+    background: var(--color-neutral-50);
+    color: rgba(0, 0, 0, 0.84);
+  }
+
+  .container {
+    width: 100%;
+    max-width: 38rem;
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+  }
+
+  .campaign {
+    display: flex;
+    min-height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2) var(--space-4);
+    background: var(--color-brand-950);
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    text-align: center;
+  }
+
+  .campaign a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    height: 4rem;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--space-4);
+    background: var(--color-white);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .header__logo img {
+    display: block;
+    height: 2rem;
+    width: auto;
+  }
+
+  .header {
+    gap: var(--space-2);
+  }
+
+  .header__logo {
+    flex: none;
+  }
+
+  .version {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-2);
+    margin-right: auto;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 0.75rem;
+  }
+
+  .version__select {
+    height: 2rem;
+    padding: 0 var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    color: inherit;
+    font: inherit;
+    font-weight: 500;
+  }
+
+  .version__select:focus-visible {
+    outline: none;
+    box-shadow: var(--shadow-focus);
+  }
+
+  @media (max-width: 36rem) {
+    .version__label {
+      display: none;
+    }
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: rgba(0, 0, 0, 0.84);
+    cursor: pointer;
+  }
+
+  .icon-btn:hover {
+    background: var(--color-interactive-surface-hover);
+  }
+
+  .icon-btn--active {
+    color: var(--color-brand-600);
+  }
+
+  .icon-btn :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .ai-btn {
+    display: inline-flex;
+    height: 2.5rem;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0 var(--space-4);
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    background:
+      linear-gradient(var(--color-white), var(--color-white)) padding-box,
+      linear-gradient(90deg, #990ae3, #4e0174) border-box;
+    color: rgba(0, 0, 0, 0.7);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .ai-btn__icon :global(svg) {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-brand-600);
+  }
+
+  .hero {
+    padding: var(--space-4) var(--space-4) var(--space-6);
+    background: linear-gradient(135deg, var(--color-brand-950), var(--color-brand-800));
+    color: var(--color-white);
+  }
+
+  .tabs {
+    display: flex;
+    max-width: 38rem;
+    margin: 0 auto var(--space-6);
+    padding: var(--space-1);
+    gap: var(--space-1);
+    overflow-x: auto;
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+  }
+
+  .tabs__item {
+    display: inline-flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    color: var(--color-interactive-text);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .tabs__item--active {
+    background: var(--color-brand-100);
+  }
+
+  .tabs__icon :global(svg) {
+    display: block;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .hero__text {
+    max-width: 34rem;
+    margin-inline: auto;
+  }
+
+  .hero__text :global(h1) {
+    margin: 0;
+    font-family: var(--font-family-display);
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .hero__text :global(p) {
+    margin: var(--space-1) 0 0;
+  }
+
+  @media (max-width: 36rem) {
+    .ai-btn {
+      padding-inline: var(--space-3);
+    }
+  }
+
+  .footer {
+    background: var(--color-brand-950);
+    color: var(--color-white);
+  }
+
+  .footer__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-8);
+  }
+
+  .footer__logo {
+    display: block;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .footer__social {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .footer__social :global(svg) {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+  }
+
+  .footer__social a {
+    color: inherit;
+  }
+
+  .footer__group {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .footer__group button {
+    display: flex;
+    width: 100%;
+    max-width: 38rem;
+    margin-inline: auto;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .footer__group .chevron :global(svg) {
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: transform 0.15s;
+  }
+
+  .footer__group button[aria-expanded="true"] .chevron :global(svg) {
+    transform: rotate(180deg);
+  }
+
+  .footer__panel {
+    max-width: 38rem;
+    margin-inline: auto;
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  .footer__bottom {
+    display: grid;
+    gap: var(--space-6);
+    padding-block: var(--space-8);
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .footer__payments {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .footer__legal {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    font-size: var(--font-size-sm);
+  }
+
+  .footer__legal p {
+    margin: 0;
+  }
+
+  .footer__legal a {
+    color: inherit;
+  }
+</style>
